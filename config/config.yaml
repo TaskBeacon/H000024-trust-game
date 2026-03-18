@@ -1,0 +1,222 @@
+subinfo_fields:
+  - name: subject_id
+    type: int
+    constraints:
+      min: 101
+      max: 999
+      digits: 3
+  - name: subname
+    type: string
+  - name: age
+    type: int
+    constraints:
+      min: 5
+      max: 80
+  - name: gender
+    type: choice
+    choices:
+      - Male
+      - Female
+
+subinfo_mapping:
+  subject_id: Subject ID (3 digits)
+  subname: Name
+  age: Age
+  gender: Gender
+  Male: Male
+  Female: Female
+  Participant Information: Participant Information
+  registration_failed: Registration failed
+  registration_successful: Registration successful
+  invalid_input: "{field} is invalid"
+
+window:
+  size: [1280, 720]
+  units: pix
+  screen: 0
+  bg_color: gray
+  fullscreen: true
+  fullscreen_lock_escape: true
+  monitor_width_cm: 35.5
+  monitor_distance_cm: 60
+
+task:
+  task_name: trust_game_preview
+  save_path: ./outputs/human
+  total_blocks: 2
+  total_trials: 48
+  trial_per_block: 24
+  conditions: [high_trust, medium_trust, low_trust]
+  key_list: ["f", "j"]
+  seed_mode: same_across_sub
+  overall_seed: 2025
+  endowment: 10
+  transfer_multiplier: 3.0
+  delta: 1
+  language: Chinese
+  voice_name: zh-CN-YunyangNeural
+  voice_enabled: false
+  input_mode: keyboard
+  hide_cursor: true
+  force_quit_enabled: true
+  force_quit_shortcut: ctrl+q
+
+timing:
+  partner_cue_duration: 0.6
+  pre_decision_fixation_duration: 0.6
+  decision_duration: 2.0
+  decision_confirmation_duration: 0.5
+  outcome_feedback_duration: 1.0
+  iti_duration: 0.8
+
+stimuli:
+  fixation:
+    type: text
+    text: "+"
+    color: white
+    height: 48
+    font: SimHei
+
+  instruction_text:
+    type: text
+    text: |
+      信任博弈任务
+
+      每轮你有 10 分初始资金。
+      你可以选择把 10 分全部投资给对方，或全部保留。
+      若投资，金额会变为 3 倍，对方再返还一部分给你。
+
+      按 F 选择左侧选项（投资），按 J 选择右侧选项（保留）。
+
+      按空格键开始。
+    color: white
+    height: 28
+    wrapWidth: 980
+    font: SimHei
+
+  partner_cue:
+    type: text
+    text: |
+      本轮对手：{partner_label}
+      请准备做出投资决策
+    color: white
+    height: 34
+    wrapWidth: 980
+    font: SimHei
+
+  decision_panel:
+    type: text
+    text: |
+      本轮初始资金：{endowment} 分
+      左侧：全部投资给对方
+      右侧：全部保留给自己
+    color: white
+    height: 38
+    wrapWidth: 980
+    font: SimHei
+
+  decision_invest:
+    type: text
+    text: 你选择了：投资
+    color: green
+    height: 40
+    font: SimHei
+
+  decision_keep:
+    type: text
+    text: 你选择了：保留
+    color: yellow
+    height: 40
+    font: SimHei
+
+  decision_timeout:
+    type: text
+    text: 未作答，按保留处理
+    color: red
+    height: 40
+    font: SimHei
+
+  outcome_feedback:
+    type: text
+    text: |
+      对手类型：{partner_label}
+      你投资：{invested} 分（变为 {multiplied_amount} 分）
+      对方返还：{returned} 分
+      本轮收益：{earned} 分
+      累计收益：{total_earned} 分
+    color: white
+    height: 34
+    wrapWidth: 980
+    font: SimHei
+
+  block_break:
+    type: text
+    text: |
+      第 {block_num}/{total_blocks} 区块结束
+      投资率：{trust_rate}
+      本区块收益：{block_earned} 分
+      累计收益：{total_earned} 分
+
+      按空格键继续
+    color: white
+    height: 28
+    wrapWidth: 980
+    font: SimHei
+
+  good_bye:
+    type: text
+    text: |
+      任务结束
+      最终收益：{total_earned} 分
+
+      按空格键退出
+    color: white
+    height: 30
+    wrapWidth: 980
+    font: SimHei
+
+triggers:
+  map:
+    exp_onset: 1
+    exp_end: 2
+    block_onset: 10
+    block_end: 11
+    high_trust_partner_cue_onset: 20
+    medium_trust_partner_cue_onset: 21
+    low_trust_partner_cue_onset: 22
+    high_trust_decision_onset: 30
+    medium_trust_decision_onset: 31
+    low_trust_decision_onset: 32
+    decision_response: 50
+    decision_timeout: 51
+    decision_confirmation_onset: 52
+    outcome_feedback_onset: 53
+    iti_onset: 60
+
+  driver:
+    type: serial_url
+    url: loop://
+    baudrate: 115200
+
+  timing:
+    post_delay_ms: 1
+
+  policy:
+    strict: false
+
+controller:
+  seed: 24024
+  enable_logging: true
+  endowment: 10
+  transfer_multiplier: 3.0
+  return_noise_ratio: 0.05
+  partner_profiles:
+    high_trust:
+      label: 高返还对手
+      return_ratio: 0.6
+    medium_trust:
+      label: 中等返还对手
+      return_ratio: 0.4
+    low_trust:
+      label: 低返还对手
+      return_ratio: 0.2

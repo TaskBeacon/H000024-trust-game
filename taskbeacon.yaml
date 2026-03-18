@@ -1,0 +1,15 @@
+id: H000024
+slug: trust-game
+title: Trust Game
+acquisition: behavior
+variant: html
+cognitive_domain:
+  - social-decision-making
+  - trust
+  - economic-game
+maturity: prototype
+version:
+  release_tag: "0.1.0"
+contracts:
+  psyflow_web_taps: v0.1.0
+maintainer: []
